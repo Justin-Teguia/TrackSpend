@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}Accueil — TrackSpend{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="hero-text">
+    <h1>Suivi des <em>dépenses</em><br>d'étudiants</h1>
+    <p>Collectez, analysez et visualisez les habitudes financières des étudiants. Un outil simple pour un aperçu complet.</p>
+    <div class="hero-cta">
+      <a href="/etudiants" class="btn btn-primary">Gérer les étudiants</a>
+      <a href="/depenses" class="btn btn-outline">Enregistrer une dépense</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="stat-card floating" style="--d:0s">
+      <span class="sc-icon">💰</span>
+      <div>
+        <div class="sc-val" id="hc-total">—</div>
+        <div class="sc-label">Total collecté (FCFA)</div>
+      </div>
+    </div>
+    <div class="stat-card floating" style="--d:.2s">
+      <span class="sc-icon">🎓</span>
+      <div>
+        <div class="sc-val" id="hc-etudiants">—</div>
+        <div class="sc-label">Étudiants inscrits</div>
+      </div>
+    </div>
+    <div class="stat-card floating" style="--d:.4s">
+      <span class="sc-icon">📋</span>
+      <div>
+        <div class="sc-val" id="hc-enregistrements">—</div>
+        <div class="sc-label">Enregistrements</div>
+      </div>
+    </div>
+    <div class="stat-card floating" style="--d:.6s">
+      <span class="sc-icon">📊</span>
+      <div>
+        <div class="sc-val" id="hc-moyenne">—</div>
+        <div class="sc-label">Dépense moyenne (FCFA)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="categories-overview">
+  <h2>Répartition par catégorie</h2>
+  <div class="cat-grid" id="catGrid">
+    <div class="loading-placeholder">Chargement…</div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  fetch('/api/stats/global').then(r=>r.json()).then(d=>{
+    document.getElementById('hc-total').textContent = d.total_depenses.toLocaleString('fr-FR');
+    document.getElementById('hc-etudiants').textContent = d.total_etudiants;
+    document.getElementById('hc-enregistrements').textContent = d.total_enregistrements;
+    document.getElementById('hc-moyenne').textContent = d.moyenne_depense.toLocaleString('fr-FR');
+
+    const ICONS = {Alimentation:'🍽️',Transport:'🚌',Logement:'🏠',Livres:'📚',Santé:'💊',Loisirs:'🎉',Vêtements:'👕',Autre:'📦'};
+    const grid = document.getElementById('catGrid');
+    grid.innerHTML = '';
+    if(d.categories.length === 0){
+      grid.innerHTML = '<p style="color:var(--muted)">Aucune donnée. <a href="/depenses">Ajouter des dépenses</a></p>';
+      return;
+    }
+    const maxT = Math.max(...d.categories.map(c=>c.total));
+    d.categories.forEach(c=>{
+      const pct = Math.round((c.total/maxT)*100);
+      grid.innerHTML += `
+        <div class="cat-item">
+          <div class="cat-top">
+            <span class="cat-icon">${ICONS[c.categorie]||'📦'}</span>
+            <span class="cat-name">${c.categorie}</span>
+            <span class="cat-total">${c.total.toLocaleString('fr-FR')} FCFA</span>
+          </div>
+          <div class="cat-bar"><div class="cat-fill" style="width:${pct}%"></div></div>
+          <div class="cat-sub">${c.nb} dépense${c.nb>1?'s':''}</div>
+        </div>`;
+    });
+  });
+</script>
+{% endblock %}

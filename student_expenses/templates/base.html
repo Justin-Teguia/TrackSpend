@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}TrackSpend – Dépenses Étudiants{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <a href="/" class="logo">Track<span>Spend</span></a>
+    <ul class="nav-links">
+      <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">Accueil</a></li>
+      <li><a href="/etudiants" class="{% if request.path == '/etudiants' %}active{% endif %}">Étudiants</a></li>
+      <li><a href="/depenses" class="{% if request.path == '/depenses' %}active{% endif %}">Dépenses</a></li>
+      <li><a href="/statistiques" class="{% if request.path == '/statistiques' %}active{% endif %}">Statistiques</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle">☰</button>
+  </nav>
+
+  <main class="page-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <p>TrackSpend &copy; 2024 — TP Collecte de Données &mdash; Dépenses Étudiants</p>
+  </footer>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

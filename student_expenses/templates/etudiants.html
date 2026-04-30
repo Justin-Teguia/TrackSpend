@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% block title %}Étudiants — TrackSpend{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <h1>Étudiants</h1>
+    <p class="subtitle">Gérer les profils et budgets étudiants</p>
+  </div>
+  <button class="btn btn-primary" onclick="openModal('addModal')">+ Nouvel étudiant</button>
+</div>
+
+<!-- Stats rapides -->
+<div class="quick-stats" id="quickStats"></div>
+
+<!-- Tableau -->
+<div class="table-card">
+  <div class="table-toolbar">
+    <input type="text" id="searchInput" placeholder="🔍 Rechercher un étudiant…" oninput="filterTable()">
+    <select id="filterFiliere" onchange="filterTable()">
+      <option value="">Toutes les filières</option>
+    </select>
+  </div>
+  <div class="table-wrap">
+    <table id="etudiantsTable">
+      <thead>
+        <tr>
+          <th>#</th><th>Nom</th><th>Prénom</th><th>Filière</th><th>Niveau</th>
+          <th>Budget mensuel</th><th>Email</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="etudiantsTbody">
+        <tr><td colspan="8" class="loading-cell">Chargement…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL Ajouter -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Nouvel étudiant</h3>
+      <button class="modal-close" onclick="closeModal('addModal')">✕</button>
+    </div>
+    <form id="addForm" onsubmit="submitAdd(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nom *</label>
+          <input type="text" name="nom" required placeholder="Mbarga"/>
+        </div>
+        <div class="form-group">
+          <label>Prénom *</label>
+          <input type="text" name="prenom" required placeholder="Jean"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email *</label>
+        <input type="email" name="email" required placeholder="jean.mbarga@univ.cm"/>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Filière *</label>
+          <select name="filiere" required>
+            <option value="">— Choisir —</option>
+            <option>Informatique</option><option>Gestion</option><option>Médecine</option>
+            <option>Droit</option><option>Économie</option><option>Lettres</option>
+            <option>Sciences</option><option>Autre</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Niveau *</label>
+          <select name="niveau" required>
+            <option value="">— Choisir —</option>
+            <option>L1</option><option>L2</option><option>L3</option>
+            <option>M1</option><option>M2</option><option>Doctorat</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Budget mensuel (FCFA)</label>
+        <input type="number" name="budget_mensuel" min="0" placeholder="50000"/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeModal('addModal')">Annuler</button>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL Éditer -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Modifier l'étudiant</h3>
+      <button class="modal-close" onclick="closeModal('editModal')">✕</button>
+    </div>
+    <form id="editForm" onsubmit="submitEdit(event)">
+      <input type="hidden" name="id"/>
+      <div class="form-row">
+        <div class="form-group"><label>Nom *</label><input type="text" name="nom" required/></div>
+        <div class="form-group"><label>Prénom *</label><input type="text" name="prenom" required/></div>
+      </div>
+      <div class="form-group"><label>Email *</label><input type="email" name="email" required/></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Filière *</label>
+          <select name="filiere" required>
+            <option>Informatique</option><option>Gestion</option><option>Médecine</option>
+            <option>Droit</option><option>Économie</option><option>Lettres</option>
+            <option>Sciences</option><option>Autre</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Niveau *</label>
+          <select name="niveau" required>
+            <option>L1</option><option>L2</option><option>L3</option>
+            <option>M1</option><option>M2</option><option>Doctorat</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Budget mensuel (FCFA)</label><input type="number" name="budget_mensuel" min="0"/></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeModal('editModal')">Annuler</button>
+        <button type="submit" class="btn btn-primary">Mettre à jour</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/etudiants.js') }}"></script>
+{% endblock %}

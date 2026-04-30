@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Statistiques — TrackSpend{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <h1>Statistiques</h1>
+    <p class="subtitle">Analyse des données de dépenses collectées</p>
+  </div>
+</div>
+
+<!-- KPI Cards -->
+<div class="kpi-grid" id="kpiGrid">
+  <div class="kpi-card"><div class="kpi-icon">💰</div><div class="kpi-val" id="kpi-total">—</div><div class="kpi-label">Total dépenses (FCFA)</div></div>
+  <div class="kpi-card"><div class="kpi-icon">🎓</div><div class="kpi-val" id="kpi-etudiants">—</div><div class="kpi-label">Étudiants</div></div>
+  <div class="kpi-card"><div class="kpi-icon">📋</div><div class="kpi-val" id="kpi-nb">—</div><div class="kpi-label">Enregistrements</div></div>
+  <div class="kpi-card"><div class="kpi-icon">📊</div><div class="kpi-val" id="kpi-moy">—</div><div class="kpi-label">Moyenne / dépense</div></div>
+</div>
+
+<div class="charts-grid">
+  <!-- Donut catégories -->
+  <div class="chart-card">
+    <h3>Répartition par catégorie</h3>
+    <div class="chart-wrap"><canvas id="chartCategories"></canvas></div>
+  </div>
+  <!-- Bar filières -->
+  <div class="chart-card">
+    <h3>Dépenses par filière</h3>
+    <div class="chart-wrap"><canvas id="chartFilieres"></canvas></div>
+  </div>
+  <!-- Évolution mensuelle -->
+  <div class="chart-card chart-wide">
+    <h3>Évolution mensuelle des dépenses</h3>
+    <div class="chart-wrap"><canvas id="chartMensuel"></canvas></div>
+  </div>
+</div>
+
+<!-- Top dépensiers -->
+<div class="table-card">
+  <h3 style="padding:1.2rem 1.5rem 0">🏆 Top 5 des plus grandes dépenses</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Étudiant</th><th>Filière</th><th>Total dépensé (FCFA)</th></tr>
+      </thead>
+      <tbody id="topTbody"><tr><td colspan="4" class="loading-cell">Chargement…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/stats.js') }}"></script>
+{% endblock %}

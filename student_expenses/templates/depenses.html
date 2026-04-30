@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block title %}Dépenses — TrackSpend{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <h1>Dépenses</h1>
+    <p class="subtitle">Enregistrer et consulter toutes les dépenses</p>
+  </div>
+  <button class="btn btn-primary" onclick="openModal('addDepModal')">+ Nouvelle dépense</button>
+</div>
+
+<!-- Filtres -->
+<div class="filters-bar">
+  <select id="filterEtudiant" onchange="loadDepenses()">
+    <option value="">Tous les étudiants</option>
+  </select>
+  <select id="filterCategorie" onchange="filterDepenses()">
+    <option value="">Toutes catégories</option>
+    <option>Alimentation</option><option>Transport</option><option>Logement</option>
+    <option>Livres</option><option>Santé</option><option>Loisirs</option>
+    <option>Vêtements</option><option>Autre</option>
+  </select>
+  <div class="total-display">Total affiché : <strong id="totalAffiche">0</strong> FCFA</div>
+</div>
+
+<!-- Tableau dépenses -->
+<div class="table-card">
+  <div class="table-wrap">
+    <table id="depensesTable">
+      <thead>
+        <tr>
+          <th>#</th><th>Étudiant</th><th>Catégorie</th><th>Montant</th>
+          <th>Description</th><th>Date</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="depensesTbody">
+        <tr><td colspan="7" class="loading-cell">Chargement…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL Ajouter dépense -->
+<div class="modal-overlay" id="addDepModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Nouvelle dépense</h3>
+      <button class="modal-close" onclick="closeModal('addDepModal')">✕</button>
+    </div>
+    <form id="addDepForm" onsubmit="submitAddDep(event)">
+      <div class="form-group">
+        <label>Étudiant *</label>
+        <select name="etudiant_id" id="depEtudiantSelect" required>
+          <option value="">— Choisir un étudiant —</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Catégorie *</label>
+          <select name="categorie" required>
+            <option value="">— Choisir —</option>
+            <option>Alimentation</option><option>Transport</option><option>Logement</option>
+            <option>Livres</option><option>Santé</option><option>Loisirs</option>
+            <option>Vêtements</option><option>Autre</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Montant (FCFA) *</label>
+          <input type="number" name="montant" required min="1" placeholder="5000"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <input type="text" name="description" placeholder="Détail de la dépense…"/>
+      </div>
+      <div class="form-group">
+        <label>Date *</label>
+        <input type="date" name="date_depense" required/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeModal('addDepModal')">Annuler</button>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/depenses.js') }}"></script>
+{% endblock %}
