@@ -245,4 +245,3 @@ if __name__ == '__main__':
                 db.session.add(d)
             db.session.commit()
             print("✅ Données de démo insérées")
-    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)), debug=True)
